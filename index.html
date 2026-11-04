@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ordenação de Estoque: Bubble Sort e Quick Sort</title>
+<style>
+  :root { --fundo:#ffffff; --texto:#1f2328; --borda:#c9ced6; --suave:#f3f5f7; --destaque:#1f6feb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fundo:#0d1117; --texto:#e6edf3; --borda:#3d444d; --suave:#161b22; --destaque:#58a6ff; }
+  }
+  body { font-family: Arial, sans-serif; background: var(--fundo); color: var(--texto); max-width: 900px; margin: 0 auto; padding: 24px 16px; line-height: 1.5; }
+  h1 { font-size: 24px; }
+  h2 { font-size: 18px; margin-top: 28px; }
+  .controles { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+  select, button { font-size: 15px; padding: 7px 12px; border: 1px solid var(--borda); border-radius: 6px; background: var(--suave); color: var(--texto); }
+  button { cursor: pointer; background: var(--destaque); color: #fff; border-color: var(--destaque); }
+  a { color: var(--destaque); }
+  .tabelas { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .tabelas > div { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { border: 1px solid var(--borda); padding: 5px 8px; text-align: left; }
+  th { background: var(--suave); }
+  .contagem { margin-top: 8px; font-size: 14px; }
+  .aviso { background: var(--suave); border: 1px solid var(--borda); border-radius: 6px; padding: 10px 14px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<h1>Ordenação de Estoque: Bubble Sort e Quick Sort</h1>
+<p>Segunda parte do trabalho de Algoritmos e Pensamento Computacional. Esta página usa os mesmos 10 produtos do programa em C e ordena os dados pelos dois algoritmos, contando quantas comparações e trocas cada um faz.</p>
+
+<p class="aviso">O trabalho principal é o programa em C (arquivo <code>main.c</code>). Esta página é uma demonstração em JavaScript dos mesmos algoritmos, não executa o código em C. Para executar o C online: <a href="https://onlinegdb.com/9Am1k-Jue" target="_blank" rel="noopener">link do OnlineGDB</a>.</p>
+
+<div class="controles">
+  <select id="ordem">
+    <option value="cresc">Crescente (menor para maior quantidade)</option>
+    <option value="decresc">Decrescente (maior para menor quantidade)</option>
+  </select>
+  <button onclick="ordenar()">Ordenar</button>
+</div>
+
+<div class="tabelas">
+  <div>
+    <h2>Antes de ordenar</h2>
+    <div id="antes"></div>
+  </div>
+  <div>
+    <h2>Bubble Sort</h2>
+    <div id="bubble">Clique em Ordenar.</div>
+    <div class="contagem" id="cBubble"></div>
+  </div>
+  <div>
+    <h2>Quick Sort</h2>
+    <div id="quick">Clique em Ordenar.</div>
+    <div class="contagem" id="cQuick"></div>
+  </div>
+</div>
+
+<script>
+  // mesmos 10 produtos do main.c
+  var estoque = [
+    {codigo: 101, nome: "Arroz 5kg", qtd: 42},
+    {codigo: 102, nome: "Feijao 1kg", qtd: 15},
+    {codigo: 103, nome: "Macarrao 500g", qtd: 68},
+    {codigo: 104, nome: "Oleo de soja", qtd: 7},
+    {codigo: 105, nome: "Acucar 1kg", qtd: 33},
+    {codigo: 106, nome: "Cafe 500g", qtd: 21},
+    {codigo: 107, nome: "Leite integral 1L", qtd: 90},
+    {codigo: 108, nome: "Sal 1kg", qtd: 4},
+    {codigo: 109, nome: "Farinha de trigo", qtd: 27},
+    {codigo: 110, nome: "Biscoito recheado", qtd: 55}
+  ];
+
+  var comparacoes, trocas;
+
+  // devolve true se "a" deve ficar depois de "b" na ordem escolhida
+  function foraDeOrdem(a, b, cresc) {
+    comparacoes++;
+    return cresc ? a.qtd > b.qtd : a.qtd < b.qtd;
+  }
+
+  function trocar(v, i, j) {
+    var aux = v[i];
+    v[i] = v[j];
+    v[j] = aux;
+    trocas++;
+  }
+
+  // Bubble Sort: compara vizinhos e troca se estiverem fora de ordem.
+  // A cada passada o maior (ou menor) elemento vai para o final.
+  function bubbleSort(v, cresc) {
+    for (var i = 0; i < v.length - 1; i++) {
+      var trocou = false;
+      for (var j = 0; j < v.length - 1 - i; j++) {
+        if (foraDeOrdem(v[j], v[j + 1], cresc)) {
+          trocar(v, j, j + 1);
+          trocou = true;
+        }
+      }
+      if (!trocou) break; // nenhuma troca: ja esta ordenado
+    }
+  }
+
+  // Quick Sort: escolhe o ultimo elemento como pivo, separa menores e
+  // maiores e repete o processo em cada lado (recursao).
+  function particionar(v, inicio, fim, cresc) {
+    var pivo = v[fim];
+    var i = inicio - 1;
+    for (var j = inicio; j < fim; j++) {
+      // o elemento vai para a esquerda se NAO estiver depois do pivo
+      if (!foraDeOrdem(v[j], pivo, cresc)) {
+        i++;
+        if (i !== j) trocar(v, i, j);
+      }
+    }
+    if (i + 1 !== fim) trocar(v, i + 1, fim);
+    return i + 1;
+  }
+
+  function quickSort(v, inicio, fim, cresc) {
+    if (inicio < fim) {
+      var p = particionar(v, inicio, fim, cresc);
+      quickSort(v, inicio, p - 1, cresc);
+      quickSort(v, p + 1, fim, cresc);
+    }
+  }
+
+  function montarTabela(v) {
+    var html = "<table><tr><th>Código</th><th>Produto</th><th>Qtd</th></tr>";
+    for (var i = 0; i < v.length; i++) {
+      html += "<tr><td>" + v[i].codigo + "</td><td>" + v[i].nome + "</td><td>" + v[i].qtd + "</td></tr>";
+    }
+    return html + "</table>";
+  }
+
+  function ordenar() {
+    var cresc = document.getElementById("ordem").value === "cresc";
+
+    var copiaBubble = estoque.slice(); // mesma entrada para os dois
+    comparacoes = 0; trocas = 0;
+    bubbleSort(copiaBubble, cresc);
+    document.getElementById("bubble").innerHTML = montarTabela(copiaBubble);
+    document.getElementById("cBubble").textContent = "Comparações: " + comparacoes + " | Trocas: " + trocas;
+
+    var copiaQuick = estoque.slice();
+    comparacoes = 0; trocas = 0;
+    quickSort(copiaQuick, 0, copiaQuick.length - 1, cresc);
+    document.getElementById("quick").innerHTML = montarTabela(copiaQuick);
+    document.getElementById("cQuick").textContent = "Comparações: " + comparacoes + " | Trocas: " + trocas;
+  }
+
+  document.getElementById("antes").innerHTML = montarTabela(estoque);
+</script>
+
+</body>
+</html>
