@@ -1,38 +1,44 @@
-# Ordenação de Estoque em C — Bubble Sort e Quick Sort
+# Ordenação de Estoque em C: Bubble Sort e Quick Sort
 
-Atividade de **Algoritmos e Pensamento Computacional** (Profª Karla Sartin).
+Trabalho da disciplina de Algoritmos e Pensamento Computacional, da professora Karla Sartin.
+
+Link para executar online: https://onlinegdb.com/9Am1k-Jue
 
 ## Objetivo
-Aplicar os algoritmos de ordenação **Bubble Sort** e **Quick Sort** em uma situação do cotidiano, comparando os resultados de ambos sobre os mesmos dados.
+
+Aplicar os algoritmos Bubble Sort e Quick Sort em uma situação do dia a dia, ordenando os mesmos dados pelos dois métodos e mostrando os resultados.
 
 ## Situação-problema
-Uma loja precisa saber quais produtos estão com **pouco estoque** (para repor) e quais têm **muito** (para fazer promoção). Para isso, a lista de produtos é ordenada pela quantidade disponível, do menor para o maior. Sem ordenação, seria necessário procurar item por item na lista.
+
+Uma loja precisa saber quais produtos estão acabando, para repor, e quais estão com muita quantidade, para fazer promoção. Para isso, a lista de produtos é ordenada pela quantidade em estoque, da menor para a maior. Sem a ordenação, seria preciso olhar item por item da lista.
 
 ## Como executar
-Pré-requisito: compilador GCC.
+
+Online: abra o link acima e clique em Run.
+
+No computador, com o compilador GCC instalado:
 
 ```bash
 gcc main.c -o estoque
-./estoque        # no Windows: estoque.exe
+./estoque
 ```
 
-## O que o programa faz
-1. Possui 10 produtos (código, nome, quantidade) fora de ordem.
-2. Exibe os dados **antes** da ordenação.
-3. Ordena uma cópia com **Bubble Sort** e exibe o resultado.
-4. Ordena outra cópia com **Quick Sort** e exibe o resultado.
+No Windows, o segundo comando é `estoque.exe`.
 
-## Os algoritmos
+## Como o programa funciona
 
-### Bubble Sort
-Compara pares de elementos vizinhos e troca de lugar se estiverem na ordem errada. A cada passada, o maior elemento "flutua" até o final do vetor. Para quando uma passada não faz nenhuma troca.
-- Complexidade: **O(n²)**
-- Simples, mas lento para muitos dados.
+O programa guarda 10 produtos em uma struct, cada um com código, nome e quantidade. Primeiro ele mostra a lista original. Depois copia os dados para dois vetores, para que os dois algoritmos ordenem exatamente a mesma entrada. Por fim, ordena uma cópia com Bubble Sort e a outra com Quick Sort e mostra o resultado de cada um.
 
-### Quick Sort
-Escolhe um **pivô**, separa os elementos menores à esquerda e os maiores à direita (partição) e repete o processo recursivamente em cada lado.
-- Complexidade média: **O(n log n)**; pior caso: O(n²)
-- Muito mais rápido para grandes volumes de dados.
+O código está todo no arquivo `main.c`, com comentários explicando cada algoritmo.
+
+## Bubble Sort
+
+Compara cada elemento com o vizinho e troca os dois de lugar se estiverem fora de ordem. A cada passada pelo vetor, o maior elemento vai para o final, como uma bolha subindo. Quando uma passada termina sem nenhuma troca, o vetor está ordenado. A complexidade é O(n²), então é simples de entender, mas fica lento com muitos dados.
+
+## Quick Sort
+
+Escolhe um elemento como pivô e separa os outros em dois grupos, os menores que o pivô e os maiores. O pivô fica na sua posição final, e o mesmo processo é repetido, por recursão, em cada grupo. A complexidade média é O(n log n), por isso é bem mais rápido que o Bubble Sort quando há muitos dados. No pior caso ele também chega a O(n²).
 
 ## Autor
-Pedro Henrique de Lira Tavares — [@pedrinH1904](https://github.com/pedrinH1904)
+
+Pedro Henrique de Lira Tavares (https://github.com/pedrinH1904)
